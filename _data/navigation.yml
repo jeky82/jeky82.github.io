@@ -32,3 +32,19 @@ header:
       ko      : &KO       소개
       ko-KR   : *KO
     url: /about.html
+    
+docs-en:
+  - title:      Home
+    children:
+      - title:  News
+        url:    /index.html
+      - title:  About Me
+        url:    /about.html
+      - title:  Archive
+        url:    /archive.html
+  - title:      GF-ICF Quick Start
+    children:
+      - title:  GF-ICF
+        url:    /gficf.html
+      - title:  Examples
+        url:    /gficf_example.html
