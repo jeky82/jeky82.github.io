@@ -182,6 +182,7 @@ analytics:
 markdown    : kramdown
 highlighter : rouge
 permalink   : date
+remote_theme: jekyll-text-theme
 
 exclude:
   - CHANGELOG.md
@@ -224,4 +225,3 @@ plugins:
   - jekyll-sitemap
   - jemoji
   
-theme: jekyll-text-theme
