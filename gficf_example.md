@@ -9,8 +9,8 @@ aside:
 ---
 
 ## Tabula Muris
-Download Tabula Muris dataset from [HERE](https://drive.google.com/open?id=1yX8IQ7DiWG8PCmYieFFS7vj53Hf1OfT2) and
-annotation from [HERE](https://drive.google.com/open?id=10ixOOsqZqf6GgwQP1okwoe_TMP_ZTzn5).
+Download Tabula Muris dataset from [HERE](https://drive.google.com/open?id=1yX8IQ7DiWG8PCmYieFFS7vj53Hf1OfT2){:target="_blank"} and
+annotation from [HERE](https://drive.google.com/open?id=10ixOOsqZqf6GgwQP1okwoe_TMP_ZTzn5){:target="_blank"}.
 
 ```R
 library(gficf)
@@ -59,3 +59,5 @@ gficf::plotCells(data = data,colorBy="cell_ontology_class",pointSize = .05) + xl
 ![tabula_annotated.png](https://github.com/dibbelab/gficf/blob/master/img/tabula_annotated.png?raw=true)
 
 ## PBMCs from 10X
+
+Cooming soon...
