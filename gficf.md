@@ -8,6 +8,16 @@ aside:
   toc: true
 ---
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-144257957-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-144257957-1');
+</script>
+
 ## What is GF-IGF
 An R implementation of the Gene Frequency - Inverse Cell Frequency method for single cell data
 normalization [(Gambardella et al. 2019)](https://www.frontiersin.org/articles/10.3389/fgene.2019.00734/abstract){:target="_blank"}.

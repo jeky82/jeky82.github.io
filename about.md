@@ -8,6 +8,16 @@ aside:
   toc: true
 ---
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-144257957-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-144257957-1');
+</script>
+
 |--|--|
 |![Image](https://loop.frontiersin.org/images/profile/706757/203){:.circle.border.shadow}| Research Associate, [TIGEM (Telethon Institute of Genetics and Medicine)](http://www.tigem.it){:target="_blank"} <br> Research Associate, [University of Naples Federico II](http://www.unina.it){:target="_blank"} <br> Department of Chemical, Materials and Production Engineering <br> TIGEM, Pozzuoli (NA) <br> Via Campi Flegrei 34, 80078 Pozzuoli (NA), Italy  <br> [Tel](tel:003908119230691) - [Mail Me](mailto:gambardella@tigem.it){:target="_blank"} - [ORCID](https://orcid.org/0000-0001-7517-1347){:target="_blank"}|
 
