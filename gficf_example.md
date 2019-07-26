@@ -18,7 +18,7 @@ aside:
   gtag('config', 'UA-144257957-1');
 </script>
 
-## Tabula Muris
+## Normalization and Clustering (Tabula Muris)
 Download Tabula Muris dataset from [HERE](https://drive.google.com/open?id=1yX8IQ7DiWG8PCmYieFFS7vj53Hf1OfT2){:target="_blank"} and
 annotation from [HERE](https://drive.google.com/open?id=10ixOOsqZqf6GgwQP1okwoe_TMP_ZTzn5){:target="_blank"}.
 
@@ -68,6 +68,53 @@ gficf::plotCells(data = data,colorBy="cell_ontology_class",pointSize = .05) + xl
 ```
 ![tabula_annotated.png](https://github.com/dibbelab/gficf/blob/master/img/tabula_annotated.png?raw=true)
 
-## PBMCs from 10X
+## How to embedd new cells in an existing space
 
-Cooming soon...
+Download PBMCs dataset from [HERE](https://drive.google.com/open?id=13cuTP7cjV62Ma4aV9jkzFpR4VoyBBmKj){:target="_blank"}.
+
+```R
+library(gficf)
+library(ggplot2)
+
+# Common pipeline to use that goes from normalization to clustering
+
+# Step 1: load data and split in training and test set
+M = readRDS("/path/to/Purified.PBMC.RAW.rds")
+
+set.seed(0)
+ix = sample(x = 1:ncol(M),size = 1000)
+M.test = M[,ix] 
+M.train = M[,-ix]
+rm(M,ix);gc()
+
+
+# Step 2: Nomrmalize the training set data with gficf
+data = gficf::gficf(M = M.train,cell_proportion_max = 1,cell_proportion_min = .05,storeRaw = F,normalize = T)
+
+# Step 3: Reduce data with Latent Semantic Anlysis before to apply t-SNE or UMAP
+data = gficf::runPCA(data = data,dim = 50)
+
+# Step 4: Applay UMAP on reduced data and plot cells
+data = gficf::runReduction(data = data,reduction = "umap",seed = 0,nt=4,a=2,b=2)
+
+# cell type is contained in the name of each cell
+data$embedded$cell.type = unlist(sapply(strsplit(x = rownames(data$embedded),split = ".",fixed = T),function(x) x[1]))
+gficf::plotCells(data = data,colorBy = "cell.type")
+```
+
+![pbmc.umap.png](https://github.com/dibbelab/gficf/blob/master/img/pbmc.umap.png?raw=true)
+
+
+```R
+# Step 5: We can now embed the new cell in the already existing space and predct thei type 
+data = gficf::embedNewCells(data = data,x = M.test,nt = 6,seed = 0)
+
+# Let's add the know cell type for each predicted cell
+data$embedded$cell.type = unlist(sapply(strsplit(x = rownames(data$embedded),split = ".",fixed = T),function(x) x[1])) 
+
+# Step 6: Plot results. Embededd cell are shown as triangle and colored according to their original cell type.
+ggplot(data = data$embedded,aes(x=X,y=Y,color=cell.type)) + geom_point(aes(shape=predicted,size=predicted)) + theme_bw() + scale_shape_manual(values = c(20,17)) + scale_size_manual(values = c(.1,3))
+
+```
+
+![pbmc.predicted.png](https://github.com/dibbelab/gficf/blob/master/img/pbmc.predicted.png?raw=true)
