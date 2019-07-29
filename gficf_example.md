@@ -32,7 +32,7 @@ library(ggplot2)
 # Common pipeline to use that goes from normalization to clustering
 
 # Step 1: Nomrmalize data with gficf
-data = gficf::gficf(M = readRDS("path/to/TabulaMuris.10x.mouse.RAW.rds"),cell_proportion_max = 1,cell_proportion_min = .05,storeRaw = F,normalize = T)
+data = gficf::gficf(M = readRDS("path/to/TabulaMuris.10x.mouse.RAW.rds"),cell_proportion_max = 1,cell_proportion_min = .05,storeRaw = T,normalize = T)
 
 # Step 2: Reduce data with Latent Semantic Anlysis before to apply t-SNE or UMAP
 data = gficf::runLSA(data = data,dim = 50)
@@ -68,6 +68,18 @@ gficf::plotCells(data = data,colorBy="cell_ontology_class",pointSize = .05) + xl
 ```
 ![tabula_annotated.png](https://github.com/dibbelab/gficf/blob/master/img/tabula_annotated.png?raw=true)
 
+```R
+# Plot the relative expression of selected genes
+p = plotGenes(data = data,genes = c("Cd34","Cd8"))
+p[[1]] + xlab("t-SNE1") + ylab("t-SNE2") + ggtitle("Cd34")
+p[[2]] + xlab("t-SNE1") + ylab("t-SNE2") + ggtitle("Cd8a")
+
+```
+
+|                                   |                                 |
+|-----------------------------------|---------------------------------|
+![Cd8a_expression.png](https://github.com/dibbelab/gficf/blob/master/img/Cd8a_expression.png?raw=true) | ![Cd34_expression.png](https://github.com/dibbelab/gficf/blob/master/img/Cd34_expression.png?raw=true)
+
 ## How to embedd new cells in an existing space
 
 Download PBMCs dataset from [HERE](https://drive.google.com/open?id=13cuTP7cjV62Ma4aV9jkzFpR4VoyBBmKj){:target="_blank"}.
@@ -95,6 +107,8 @@ data = gficf::gficf(M = M.train,cell_proportion_max = 1,cell_proportion_min = .0
 data = gficf::runPCA(data = data,dim = 50)
 
 # Step 4: Applay UMAP on reduced data and plot cells
+# Note: You can pass more parameters directly to umap. a and b are specific parameters controlling the embendding.
+# use ?umap for details and additional parameters to use.
 data = gficf::runReduction(data = data,reduction = "umap",seed = 0,nt=4,a=2,b=2)
 
 # cell type is contained in the name of each cell
