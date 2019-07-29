@@ -60,17 +60,17 @@ gficf::plotCells(data = data,colorBy="cluster",pointSize = .05) + xlab("t-SNE1")
 ```R
 # Additional steps: add annotation to cells and plot it.
 info = readRDS("/path/to/TabulaMuris.10x.mouse.annotation.rds")
-data$embedded$tissue = info$tissue
-data$embedded$subtissue = info$subtissue
-data$embedded$cell_ontology_class = info$cell_ontology_class
-gficf::plotCells(data = data,colorBy="cell_ontology_class",pointSize = .05) + xlab("t-SNE1") + ylab("t-SNE2") + ggtitle("Cells colored by Clusters") 
+data$embedded$tissue = info$tissue[match(rownames(data$embedded),info$id)]
+data$embedded$subtissue = info$subtissue[match(rownames(data$embedded),info$id)]
+data$embedded$cell_ontology_class = info$cell_ontology_class[match(rownames(data$embedded),info$id)]
+gficf::plotCells(data = data,colorBy="cell_ontology_class",pointSize = .05) + xlab("t-SNE1") + ylab("t-SNE2") + ggtitle("Cells colored by Types") 
 
 ```
 ![tabula_annotated.png](https://github.com/dibbelab/gficf/blob/master/img/tabula_annotated.png?raw=true)
 
 ```R
 # Plot the relative expression of selected genes
-p = plotGenes(data = data,genes = c("Cd34","Cd8"))
+p = gficf::plotGenes(data = data,genes = c("Cd34","Cd8a"))
 p[[1]] + xlab("t-SNE1") + ylab("t-SNE2") + ggtitle("Cd34")
 p[[2]] + xlab("t-SNE1") + ylab("t-SNE2") + ggtitle("Cd8a")
 
