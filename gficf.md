@@ -82,5 +82,7 @@ After computation of Jaccard distances among cells, the Louvain community detect
 All supported communities detection algorithm (set by the `community.algo` parameter) are:
 
 * Louvain (default)
+* Louvian with modularity optimization (c++ function imported from Seurat)
+* Louvain algorithm with multilevel refinement (c++ function imported from Seurat)
 * Walktrap
 * Fastgreedy
