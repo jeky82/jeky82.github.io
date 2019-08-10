@@ -52,10 +52,6 @@ if(!require(devtools)){
   install.packages("devtools") # If not already installed
 }
 devtools::install_github("dibbelab/gficf")
-
-# Install also edgeR
-if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
 ```
 ## Phenograph Implementation Details
 
