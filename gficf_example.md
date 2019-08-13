@@ -132,3 +132,86 @@ ggplot(data = data$embedded,aes(x=X,y=Y,color=cell.type)) + geom_point(aes(shape
 ```
 
 ![pbmc.predicted.png](https://github.com/dibbelab/gficf/blob/master/img/pbmc.predicted.png?raw=true)
+
+## How to perform GSEA to identify active pathways in each cluster
+
+Download PBMCs dataset from [HERE](https://drive.google.com/open?id=13cuTP7cjV62Ma4aV9jkzFpR4VoyBBmKj){:target="_blank"}.
+Download gmt file containing the gene sets from [HERE](https://drive.google.com/open?id=1hTVlj4kUTOB8F0-nUYPZ60mKoHBOMcLl){:target="_blank"}.
+
+```R
+library(gficf)
+library(ggplot2)
+
+# Example on how use GSEA for the identification
+# of active pathways for each identified cluster
+
+# Step 1: load PBMC dstsdet
+pbmc = readRDS("/path/to/Purified.PBMC.RAW.rds")
+
+# Step 2: Nomrmalize the training set data with gficf
+data = gficf::gficf(M = pbmc,cell_proportion_max = 1,cell_proportion_min = .05,storeRaw = F,normalize = T)
+rm(pbmc);gc()
+
+# Step 3: Reduce data with PCA before to apply t-SNE or UMAP
+data = gficf::runPCA(data = data,dim = 50)
+
+# Step 4: Applay umap on reduced data and plot cells
+# see ?umap for what a,b,n_neighbors and metric parameters are.
+data = gficf::runReduction(data = data,reduction = "umap",seed = 0,nt = 2,a=2,b=2,n_neighbors=30,metric="manhattan")
+
+# cell type is contained in the name of each cell
+data$embedded$cell.type = unlist(sapply(strsplit(x = rownames(data$embedded),split = ".",fixed = T),function(x) x[1]))
+p1 = gficf::plotCells(data = data,colorBy = "cell.type")
+print(p1)
+
+# Step 5: Cluster cells with phenograph method and visualize the results
+# see ?clustcells for more details
+data = gficf::clustcells(data = data,dist.method = "manhattan",nt = 2,k = 50,community.algo = "louvian 2",seed = 0,resolution = .75,n.start = 25,n.iter = 50)
+p2 = gficf::plotCells(data = data,colorBy = "cluster")
+print(p2)
+```
+
+|        Plot p1 (by cell type)     |       Plot p2 (by clusters)     |
+|-----------------------------------|---------------------------------|
+|![PBMC_umap.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/PBMC_umap.png?raw=true)|![PBMC_clusters.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/PBMC_clusters.png?raw=true)|
+
+
+Now that we have identified clusters we can use GSEA to identify pathway activity
+across cells of the same cluster. Briefly Gene Ranks are first summedd across cells
+of the same cluster and then GSEA is performed.   
+In this example we use the 50 hallmarks pathways from mSigDB. However You can find additional gene sets files (gmt) on
+mSigDB [HERE](http://software.broadinstitute.org/gsea/msigdb/collections.jsp){:target="_blank"}. **Only the one with official gene symbols are
+actually supported.**   
+   
+**Tips:** Use different combination of convertToEns and convertHu2Mm in the function runGSEA to convert gene set files in the one you need before to perform GSEA. Choose the right combination to match identifier you are using to rapresent genes.   
+
+**Examples:**   
+convertToEns = **T** and convertHu2Mm = **F** **-->** human symbols are converted to human ensamble id   
+convertToEns = **T** and convertHu2Mm = **T** **-->** human symbols are converted to mouse ensamble id   
+convertToEns = **F** and convertHu2Mm = **T** **-->** human symbols are converted to mouse symbols   
+convertToEns = **F** and convertHu2Mm = **F** **-->** no conversions, original symbols in the gmt file are used   
+
+```R
+# Step 6: Run GSEA to identify active pathways in each group of cells
+# ?runGSEA for details
+
+gmt.file.path = "/path/to/h.all.v6.2.symbols.gmt"
+data = gficf::runGSEA(data = data,gmt.file = gmt.file.path,nsim = 10000,convertToEns = T,convertHu2Mm = F,minSize = 15,nt = 4)
+
+# Step 7: Plot GSEA results to show significant pathways in eac cluster
+# Note: To be comparable across pathways the Normalized Enrichement Scores (NES) are plotted.
+p3 = gficf::plotGSEA(data = data,fdr = .1)
+print(p3)
+
+# Note: Info about pathways and number of used genes are in data$gsea$stat dataframe
+print(head(data$gsea$stat))
+
+# Step 8: Plot pathway activity across cells in the embedded space
+p4 = gficf::plotPathway(data = data, pathwayName = "HALLMARK_PI3K_AKT_MTOR_SIGNALING",fdr = .1)
+print(p4)
+```
+
+|        Plot p3 (GSEA results)     |Plot p4 (PI3K AKT MTOR pathway activity)|
+|-----------------------------------|---------------------------------|
+|![PBMC_gsea.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/PBMC_gsea.png?raw=true)|![PBMC_mtor.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/PBMC_mtor.png?raw=true)|
+

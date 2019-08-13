@@ -1,5 +1,5 @@
 ---
-title: "New Functionality Added"
+title: "New Functionality: Emmbed new cells"
 tags: gf-icf
 sidebar:
   nav: docs-en
