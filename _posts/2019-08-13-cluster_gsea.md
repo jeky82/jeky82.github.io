@@ -1,6 +1,6 @@
 ---
 title: "New Functionality: Predict active pathways"
-tags: gf-icf
+tags: gf-icf GSEA Pathway_Activity
 sidebar:
   nav: docs-en
 ---

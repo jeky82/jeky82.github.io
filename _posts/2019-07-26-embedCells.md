@@ -1,6 +1,6 @@
 ---
 title: "New Functionality: Emmbed new cells"
-tags: gf-icf
+tags: gf-icf UMAP
 sidebar:
   nav: docs-en
 ---
