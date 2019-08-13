@@ -180,8 +180,7 @@ Now that we have identified clusters we can use GSEA to identify pathway activit
 across cells of the same cluster. Briefly Gene Ranks are first summedd across cells
 of the same cluster and then GSEA is performed.   
 In this example we use the 50 hallmarks pathways from mSigDB. However You can find additional gene sets files (gmt) on
-mSigDB [HERE](http://software.broadinstitute.org/gsea/msigdb/collections.jsp){:target="_blank"}. **Only the one with official gene symbols are
-actually supported.**   
+mSigDB [HERE](http://software.broadinstitute.org/gsea/msigdb/collections.jsp){:target="_blank"}. **Only gmt files with official gene symbols are actually supported.**   
    
 **Tips:** Use different combination of convertToEns and convertHu2Mm in the function runGSEA to convert gene set files in the one you need before to perform GSEA. Choose the right combination to match identifier you are using to rapresent genes.   
 
