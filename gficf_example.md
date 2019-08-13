@@ -19,8 +19,8 @@ aside:
 </script>
 
 ## Normalization and Clustering (Tabula Muris)
-Download Tabula Muris dataset from [HERE](https://drive.google.com/open?id=1yX8IQ7DiWG8PCmYieFFS7vj53Hf1OfT2){:target="_blank"} and
-annotation from [HERE](https://drive.google.com/open?id=10ixOOsqZqf6GgwQP1okwoe_TMP_ZTzn5){:target="_blank"}.
+Download Tabula Muris dataset from [HERE](https://drive.google.com/file/d/1rBClWTzRtxLGJ8JUT3MM_p9w7Ec80yCf/view?usp=sharing){:target="_blank"} and
+annotation from [HERE](https://drive.google.com/file/d/1wDaF6ONd59cDKbIBijpE2Cc2ViE7iGG9/view?usp=sharing){:target="_blank"}.
 
 ```R
 library(gficf)
@@ -82,7 +82,7 @@ p[[2]] + xlab("t-SNE1") + ylab("t-SNE2") + ggtitle("Cd8a")
 
 ## How to embedd new cells in an existing space
 
-Download PBMCs dataset from [HERE](https://drive.google.com/open?id=13cuTP7cjV62Ma4aV9jkzFpR4VoyBBmKj){:target="_blank"}.
+Download PBMCs dataset from [HERE](https://drive.google.com/file/d/15pW1JNFz7TjBXuT5Z90h2yq-SO9xrj77/view?usp=sharing){:target="_blank"}.
 
 ```R
 library(gficf)
@@ -135,8 +135,8 @@ ggplot(data = data$embedded,aes(x=X,y=Y,color=cell.type)) + geom_point(aes(shape
 
 ## How to perform GSEA to identify active pathways in each cluster
 
-Download PBMCs dataset from [HERE](https://drive.google.com/open?id=13cuTP7cjV62Ma4aV9jkzFpR4VoyBBmKj){:target="_blank"}.
-Download gmt file containing the gene sets from [HERE](https://drive.google.com/open?id=1hTVlj4kUTOB8F0-nUYPZ60mKoHBOMcLl){:target="_blank"}.
+Download PBMCs dataset from [HERE](https://drive.google.com/file/d/15pW1JNFz7TjBXuT5Z90h2yq-SO9xrj77/view?usp=sharing){:target="_blank"}.   
+Download gmt file containing the gene sets from [HERE](https://drive.google.com/file/d/1_N8-LCXJrPgGyuZwdEfxQ7bdLWdzZdi3/view?usp=sharing){:target="_blank"}.
 
 ```R
 library(gficf)
