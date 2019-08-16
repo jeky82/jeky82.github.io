@@ -16,7 +16,9 @@ sidebar:
 </script>
   
 ## Parallel Jaccard Benchmarks
-We have implemented a naive but fast parallel version of Jaccard Coefficient estimation for the Phenograph method, thus obtaing a speed boot of about 20X when comparade with previous serial implementation.
+We have implemented a naive but fast parallel version of Jaccard Coefficient estimation for the Phenograph method, thus obtaing a speed boot of about 20X when comparade with previous serial implementation.   
+   
+Tets were performed using a dataset composed by 32900 cells and using different numbers of neighbors for each cell (i.e. 15, 25, 50, 100, 250). Each jaccard estimation method (serial and parallel) was run two times. See code below for details. 
 
 |     test       |  elapsed | relative | cell neighbors number|
 |----------------|---------------------|-------------|
