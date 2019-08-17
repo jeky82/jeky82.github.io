@@ -119,7 +119,7 @@ p1 = gficf::plotCells(data = data,colorBy = "cell.type")
 print(p1)
 ```
 
-Now that we have a UMAP embedded space for the cells in the training set, we can try to add the one contained in the
+Now that we have a UMAP embedded space for the cells of the training set, we can try to add the one contained in the
 test set and see where they are placed.
 
 ```R
@@ -135,7 +135,7 @@ print(p2)
 
 ```
 
-|        Plot p1 (by cell type)     |  Plot p2 (placed new cells)     |
+|        Plot p1 (by cell type)     |  Plot p2 (cell repositioning)   |
 |-----------------------------------|---------------------------------|
 |![pbmc_pred_umap.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/pbmc_pred_umap.png?raw=true)|![pbmc_pred_new_cells.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/pbmc_pred_new_cells.png?raw=true)|
 
