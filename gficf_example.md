@@ -108,16 +108,19 @@ data = gficf::runPCA(data = data,dim = 50)
 
 # Step 4: Applay UMAP on reduced data and plot cells
 # Note: You can pass more parameters directly to umap. a and b are specific parameters controlling the embendding.
-# use ?umap for details and additional parameters to use.
-data = gficf::runReduction(data = data,reduction = "umap",seed = 0,nt=4,a=2,b=2)
+# see ?umap for what a,b,n_neighbors and metric parameters are.
+data = gficf::runReduction(data = data,reduction = "umap",seed = 0,nt=4,a=2,b=2,n_neighbors=30,metric="manhattan",verbose = T)
 
-# cell type is contained in the name of each cell
+# Add cell type info that is contained in the name of each cell
 data$embedded$cell.type = unlist(sapply(strsplit(x = rownames(data$embedded),split = ".",fixed = T),function(x) x[1]))
-gficf::plotCells(data = data,colorBy = "cell.type")
+
+# Plot cells by cell type
+p1 = gficf::plotCells(data = data,colorBy = "cell.type")
+print(p1)
 ```
 
-![pbmc.umap.png](https://github.com/dibbelab/gficf/blob/master/img/pbmc.umap.png?raw=true)
-
+Now that we have a UMAP embedded space for the cells in the training set, we can try to add the one contained in the
+test set and see where they are placed.
 
 ```R
 # Step 5: We can now embed the new cell in the already existing space and predct thei type 
@@ -127,11 +130,15 @@ data = gficf::embedNewCells(data = data,x = M.test,nt = 6,seed = 0)
 data$embedded$cell.type = unlist(sapply(strsplit(x = rownames(data$embedded),split = ".",fixed = T),function(x) x[1])) 
 
 # Step 6: Plot results. Embededd cell are shown as triangle and colored according to their original cell type.
-ggplot(data = data$embedded,aes(x=X,y=Y,color=cell.type)) + geom_point(aes(shape=predicted,size=predicted)) + theme_bw() + scale_shape_manual(values = c(20,17)) + scale_size_manual(values = c(.1,3))
+p2 = ggplot(data = data$embedded,aes(x=X,y=Y,color=cell.type)) + geom_point(aes(shape=predicted,size=predicted)) + theme_bw() + scale_shape_manual(values = c(20,17)) + scale_size_manual(values = c(.1,3))
+print(p2)
 
 ```
 
-![pbmc.predicted.png](https://github.com/dibbelab/gficf/blob/master/img/pbmc.predicted.png?raw=true)
+|        Plot p1 (by cell type)     |  Plot p2 (placed new cells)     |
+|-----------------------------------|---------------------------------|
+|![pbmc_pred_umap.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/pbmc_pred_umap.png?raw=true)|![pbmc_pred_new_cells.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/pbmc_pred_new_cells.png?raw=true)|
+
 
 ## How to perform GSEA to identify active pathways in each cluster
 
