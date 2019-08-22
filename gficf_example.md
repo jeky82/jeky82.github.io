@@ -32,7 +32,7 @@ library(ggplot2)
 # Common pipeline to use that goes from normalization to clustering
 
 # Step 1: Nomrmalize data with gficf
-data = gficf::gficf(M = readRDS("path/to/TabulaMuris.10x.mouse.RAW.rds"),cell_proportion_max = 1,cell_proportion_min = .05,storeRaw = T,normalize = T)
+data = gficf::gficf(M = readRDS("~/work/current/scRNA_normalization_paper/RData/TabulaMuris.10x.mouse.RAW.rds"),cell_proportion_max = 1,cell_proportion_min = .05,storeRaw = T,normalize = T)
 
 # Step 2: Reduce data with Latent Semantic Anlysis before to apply t-SNE or UMAP
 data = gficf::runLSA(data = data,dim = 50)
@@ -42,43 +42,56 @@ data = gficf::runLSA(data = data,dim = 50)
 
 # Step 3: Applay t-SNE on reduced data and plot cells
 data = gficf::runReduction(data = data,reduction = "tsne",seed = 0,nt=4)
-gficf::plotCells(data = data)
+p1 = gficf::plotCells(data = data) + xlab("t-SNE1") + ylab("t-SNE2")
+print(p1)
 
 # Alternative Step 3: Applay UMAP on reduced data
 # data = gficf::runReduction(data = data,reduction = "umap",seed = 0,nt=4)
 # gficf::plotCells(data = data)
 
 # Step 4: Cell clustering using Phenograph algorithm
-data = gficf::clustcells(data = data,from.embedded = F,dist.method = "manhattan",nt = 4,k = 50,community.algo = "louvian",seed = 0)
+# We use louvian Louvian with modularity optimization.
+# The resolution parameter is usede to fine-tune the final number of clusters.
+# ?clustcells for details.
+data = gficf::clustcells(data = data,from.embedded = F,dist.method = "manhattan",nt = 4,k = 50,community.algo = "louvian 2",seed = 0,resolution = .25, n.start = 25, n.iter = 50)
 
 # Step 5: Visualize cells by identified clusters
-gficf::plotCells(data = data,colorBy="cluster",pointSize = .05) + xlab("t-SNE1") + ylab("t-SNE2") + ggtitle("Cells colored by Clusters") 
-
+p2 = gficf::plotCells(data = data,colorBy="cluster",pointSize = .05) + xlab("t-SNE1") + ylab("t-SNE2")
+print(p2)
 ```
-![tabula_clusters.png](https://github.com/dibbelab/gficf/blob/master/img/tabula_clusters.png?raw=true)
+|        Plot p1 (t-SNE)            |  Plot p2 (Colored by clusters)  |
+|-----------------------------------|---------------------------------|
+|![tabula_tSNE.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/tabula_tSNE.png?raw=true)|![tabula_clusters.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/tabula_clusters.png?raw=true)|
+
 
 ```R
 # Additional steps: add annotation to cells and plot it.
-info = readRDS("/path/to/TabulaMuris.10x.mouse.annotation.rds")
+# Additional steps: add annotation to cells and plot it.
+info = readRDS("~/work/current/scRNA_normalization_paper/RData/TabulaMuris.10x.mouse.annotation.rds")
 data$embedded$tissue = info$tissue[match(rownames(data$embedded),info$id)]
 data$embedded$subtissue = info$subtissue[match(rownames(data$embedded),info$id)]
 data$embedded$cell_ontology_class = info$cell_ontology_class[match(rownames(data$embedded),info$id)]
-gficf::plotCells(data = data,colorBy="cell_ontology_class",pointSize = .05) + xlab("t-SNE1") + ylab("t-SNE2") + ggtitle("Cells colored by Types") 
-
+p3 = gficf::plotCells(data = data,colorBy="cell_ontology_class",pointSize = .05) + xlab("t-SNE1") + ylab("t-SNE2")
+print(p3)
 ```
-![tabula_annotated.png](https://github.com/dibbelab/gficf/blob/master/img/tabula_annotated.png?raw=true)
+
+![tabula_annotated.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/tabula_annotated.png?raw=true)
+
 
 ```R
 # Plot the relative expression of selected genes
-p = gficf::plotGenes(data = data,genes = c("Cd34","Cd8a"))
-p[[1]] + xlab("t-SNE1") + ylab("t-SNE2") + ggtitle("Cd34")
-p[[2]] + xlab("t-SNE1") + ylab("t-SNE2") + ggtitle("Cd8a")
+p = plotGenes(data = data,genes = c("Cd34","Cd8a"))
+p4 = p[[1]] + xlab("t-SNE1") + ylab("t-SNE2")
+print(p4)
+
+p5 = p[[2]] + xlab("t-SNE1") + ylab("t-SNE2")
+print(p5)
 
 ```
 
 |                                   |                                 |
 |-----------------------------------|---------------------------------|
-![Cd8a_expression.png](https://github.com/dibbelab/gficf/blob/master/img/Cd8a_expression.png?raw=true) | ![Cd34_expression.png](https://github.com/dibbelab/gficf/blob/master/img/Cd34_expression.png?raw=true)
+![Cd8a_expression.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/Cd8a_expression.png?raw=true) | ![Cd34_expression.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/Cd34_expression.png?raw=true)
 
 ## How to embedd new cells in an existing space
 
