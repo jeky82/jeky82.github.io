@@ -291,5 +291,5 @@ plot(p6)
 ```
 |        Plot p5 (KLRF1)            |        Plot p6 (CD20)           |
 |-----------------------------------|---------------------------------|
-|![pbmc_klrf1.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/pbmc_klrf1?raw=true)|![pbmc_ms4a1.png](https://raw.githubusercontent.com/jeky82/jeky82.github.io/master/img/pbmc_ms4a1.png)|
+|!![pbmc_klrf1.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/pbmc_klrf1.png?raw=true)|![pbmc_ms4a1.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/pbmc_ms4a1.png?raw=true)|
 
