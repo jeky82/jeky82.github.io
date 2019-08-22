@@ -169,7 +169,7 @@ library(ggplot2)
 pbmc = readRDS("/path/to/Purified.PBMC.RAW.rds")
 
 # Step 2: Nomrmalize the training set data with gficf
-data = gficf::gficf(M = pbmc,cell_proportion_max = 1,cell_proportion_min = .05,storeRaw = F,normalize = T)
+data = gficf::gficf(M = pbmc,cell_proportion_max = 1,cell_proportion_min = .05,storeRaw = T,normalize = T)
 rm(pbmc);gc()
 
 # Step 3: Reduce data with PCA before to apply t-SNE or UMAP
@@ -233,4 +233,63 @@ print(p4)
 |        Plot p3 (GSEA results)     |Plot p4 (PI3K AKT MTOR pathway activity)|
 |-----------------------------------|---------------------------------|
 |![PBMC_gsea.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/PBMC_gsea.png?raw=true)|![PBMC_mtor.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/PBMC_mtor.png?raw=true)|
+
+## Find Marker Genes
+
+GFICF package try to identify marker genes across clusters performing [Mann-Whitney U test with continuity correction](https://jeky82.github.io/2019/08/20/MannWhitney.html){:target="_blank"}.   
+   
+Briefly DE genes of each cluster are identified comparing the expression of each gene in each cluster versus the all the others. Below you can find and example of how do it and plot results.
+
+The first five steps are the same of the previus section [How to perform GSEA to identify active pathways in each cluster](https://jeky82.github.io/gficf_example.html#how-to-perform-gsea-to-identify-active-pathways-in-each-cluster) in which you perform dimensionality reduction and identify cluster. So for semplicity I will assume you have already performed these steps and I will start from the sixth step consisiting in identifing marker genes of each cluster. 
+
+```R
+# First Identify marker genes across cluster of cells
+# see ?findClusterMarkers for details
+data = gficf::findClusterMarkers(data = data,nt = 4,hvg = T,verbose = T)
+
+# results are in data$de.genes
+# Only genes with FDR < 5% are retuned and they are already sorted by log2 fold change
+head(data$de.genes)
+
+# Lets add symbols to data$de.genes dataframe
+# see ?ensToSymbol for details
+data$de.genes = gficf::ensToSymbol(df = data$de.genes,col = "ens",organism = "human")
+
+# Let's cosider as marke the most upregulated gene of each cluster
+markers = data$de.genes[!duplicated(data$de.genes$cluster),]
+
+# We can now plot them with Violin plot
+gene2plot = markers$ens
+p3 = gficf::plotGeneViolin(data = data,gene = gene2plot,ncol = 2)
+plot(p3)
+
+# If we want to use symbols instead of ensamble, just use symbols as names of the vector of ensamble ids
+names(gene2plot) = markers$symb
+p4 = gficf::plotGeneViolin(data = data,gene = gene2plot,ncol = 2)
+plot(p4)
+```
+
+|        Plot p3 (Marker Violin ensID)     |Plot p4 (Marker Violin symbols)|
+|-----------------------------------|---------------------------------|
+|![pbmc_marker_violin_ens.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/pbmc_marker_violin_ens.png?raw=true)|![pbmc_marker_violin_symbols.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/pbmc_marker_violin_symbols.png?raw=true)|
+
+
+Remeber that if you want to plot the expression of a gene (ore more than one) in the embedd space
+you can use the function plotGenes.   
+   
+Looking at the results above, for example cluster 13 that correspond to natural killer cell is charachterized
+by the high expression of KLRF1 (Killer Cell Lectin Like Receptor F1) while the cluster 5 
+that correspond to B-cell is characterized by high expression of MS4A1 (alias B-Lymphocyte Antigen CD20)
+
+```R
+p.list = gficf::plotGenes(data = data,genes = gene2plot[c("KLRF1","MS4A1")],log2Expr = T)
+p5 = p.list[[1]]
+plot(p5)
+
+p6 = p.list[[2]]
+plot(p6)
+```
+|        Plot p5 (KLRF1)     |Plot p6 (CD20)|
+|-----------------------------------|---------------------------------|
+|![pbmc_klrf1.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/pbmc_klrf1?raw=true)|![pbmc_ms4a1.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/pbmc_ms4a1.png?raw=true)|
 
