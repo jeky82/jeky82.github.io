@@ -16,7 +16,7 @@ sidebar:
 </script>
   
 ## Embed new cells in an already existing space
-I have implemented an RcppParalle and Rcpp version of Mann–Whitney U test with continuity correction, that using about **100X faster then native R function** and **5X faster then corresponding serial C++ function**. Test were performed using i7 with 6 cores.   
+I have implemented an RcppParalle and Rcpp version of Mann–Whitney U test with continuity correction, that using 6 threads was about **100X faster then native R function** and **5X faster then corresponding serial C++ function**. Test were performed using i7 with 6 cores.   
 
 The implemented C++ Mann–Whitney U test correspond to the R command wilcox.test(x,y,alternative = "two.sided", paired = F,exact = F,correct = T). 
 
