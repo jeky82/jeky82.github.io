@@ -153,6 +153,15 @@ print(p2)
 |![pbmc_pred_umap.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/pbmc_pred_umap.png?raw=true)|![pbmc_pred_new_cells.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/pbmc_pred_new_cells.png?raw=true)|
 
 
+Since the nearest neighbor index memory is owned by the C++ code and is opaque to R, the **saveRDS and loadRDS don't work with uwot models**. Hence, to preserve and use the umap/tumap model across different R sessions, please save (and load) the `gficf data object` with the corrsponding functions `saveGFIC` (or `loadGFICF`).
+
+```R
+# save gficf object
+saveGFICF(data, file = "path/to/save/gficf_data")
+
+```
+
+
 ## How to perform GSEA to identify active pathways in each cluster
 
 Download PBMCs dataset from [HERE](https://drive.google.com/file/d/15pW1JNFz7TjBXuT5Z90h2yq-SO9xrj77/view?usp=sharing){:target="_blank"}.   
