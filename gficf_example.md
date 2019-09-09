@@ -59,9 +59,11 @@ data = gficf::clustcells(data = data,from.embedded = F,dist.method = "manhattan"
 p2 = gficf::plotCells(data = data,colorBy="cluster",pointSize = .05) + xlab("t-SNE1") + ylab("t-SNE2")
 print(p2)
 ```
+
 |        Plot p1 (t-SNE)            |  Plot p2 (Colored by clusters)  |
 |-----------------------------------|---------------------------------|
-|![tabula_tSNE.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/tabula_tSNE.png?raw=true)|![tabula_clusters.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/tabula_clusters.png?raw=true)|
+![tabula_tSNE.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/tabula_tSNE.png?raw=true) | ![tabula_clusters.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/tabula_clusters.png?raw=true)
+
 
 
 ```R
