@@ -102,6 +102,7 @@ Download PBMCs dataset from [HERE](https://drive.google.com/file/d/15pW1JNFz7TjB
 ```R
 library(gficf)
 library(ggplot2)
+library(plyr)
 
 # Common pipeline to use that goes from normalization to clustering
 
@@ -154,6 +155,31 @@ print(p2)
 |-----------------------------------|---------------------------------|
 |![pbmc_pred_umap.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/pbmc_pred_umap.png?raw=true)|![pbmc_pred_new_cells.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/pbmc_pred_new_cells.png?raw=true)|
 
+
+We can also try to **classify new ebedded cells** and compute accurancy of the classifier. Cells are classified using K-nn method after cell profiles is trasformed with GF-ICF weigths estimated on the training set and multiplied for gene loading of PCA/LSA transformation.
+
+```R
+# Step 7: We can now try to classify added cells from the test set using cells in the training set.
+#
+# we just need to specify classes (i.e. cell types) of cells in the training set and the number of k-nn to use.
+cl = unlist(sapply(strsplit(x = colnames(data$gficf),split = ".",fixed = T),function(x) x[1])) 
+
+# than we can call classifier. Predicted types are in the coloumn pred of the returned dataframe.
+df.pred = gficf::classify.cells(data = data,classes = cl,k = 7)
+
+# Let's compute classification precision [TP/(TP+FP)]
+df.pred$real_cell_type = unlist(sapply(strsplit(x = df.pred$cell.id,split = ".",fixed = T),function(x) x[1]))
+
+# Overall precision is 0.888
+print(sum(df.pred$pred==df.pred$real_cell_type)/nrow(df.pred))
+
+# Precision by cell type
+ppv.stat = ddply(df.pred,"real_cell_type",summarise,acc=sum(real_cell_type==pred)/length(real_cell_type))
+p3 = ggplot(data = ppv.stat,aes(x=real_cell_type,y=acc)) + geom_bar(stat = "identity",width = .25,fill="darkred") + theme_bw() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + ylab("PPV (Positive Predicted Value)") + xlab("")
+print(p3)
+```
+
+![PPV_pbmc_classifier.png](https://github.com/jeky82/jeky82.github.io/blob/master/img/PPV_pbmc_classifier.png?raw=true)
 
 Since the nearest neighbor index memory is owned by the C++ code and is opaque to R, the **saveRDS and loadRDS don't work with uwot models**. Hence, to preserve and use the umap/tumap model across different R sessions, please save (and load) the `gficf data object` with the corrsponding functions `saveGFIC` (or `loadGFICF`).
 
